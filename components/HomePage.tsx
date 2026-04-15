@@ -92,7 +92,7 @@ export default function HomePage() {
   const startLiveMatch = async () => {
     if (!user) {
       setShowGuestPopup(true);
-      setTimeout(() => router.push("/play"), 3000);
+      setTimeout(() => router.push("/play"), 2000);
       return;
     }
 
