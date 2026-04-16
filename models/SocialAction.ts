@@ -14,6 +14,9 @@ const SocialActionSchema = new Schema({
 
 // Optimization: Indexing makes searching for notifications very fast
 SocialActionSchema.index({ receiverId: 1, type: 1, createdAt: -1 });
+SocialActionSchema.index({ senderId: 1, receiverId: 1, type: 1 });
+SocialActionSchema.index({ receiverId: 1, type: 1 });
+SocialActionSchema.index({ createdAt: -1 });
 
 const SocialAction =
   models.SocialAction || model("SocialAction", SocialActionSchema);

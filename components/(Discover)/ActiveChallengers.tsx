@@ -9,16 +9,23 @@ import { StatusBadge } from "../(Challenge)/StatusBadge";
 import { PlayerProfileModal } from "./PlayerProfileModal";
 import GuestPopup from "../GuestPopup";
 
-const DUMMY_PLAYERS = [
-  {
-    id: "dummy1",
-    name: "Maya",
-    age: 24,
-    statusBadge: "Horse",
-    img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maya",
-    voiceIntro: "",
-  },
-];
+
+// Actions
+import { getActivePlayers } from "@/actions/(explore)/playerActions";
+import {logViewAction} from '@/actions/(social)/ViewAcction'
+import { toggleLikeAction } from "@/actions/(social)/LikeAction";
+
+
+// const DUMMY_PLAYERS = [
+//   {
+//     id: "dummy1",
+//     name: "Maya",
+//     age: 24,
+//     statusBadge: "Horse",
+//     img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maya",
+//     voiceIntro: "",
+//   },
+// ];
 const viewedIds = new Set();
 
 const ActiveChallengers = ({
@@ -44,8 +51,7 @@ const ActiveChallengers = ({
     const fetchData = async () => {
       const start = Date.now();
       try {
-        const res = await fetch(`/api/players?userId=${user?._id || ""}`);
-        const data = await res.json();
+        const data = await getActivePlayers(user?._id || "")
 
         console.log(`✨ [FETCH] Received in ${Date.now() - start}ms`);
 
@@ -70,16 +76,12 @@ const ActiveChallengers = ({
   }, [user?._id, setLikeCount, setViewers]); // Add setViewers to dependency
 
   const logProfileView = async (receiverId: string, receiverName: string) => {
-    if (!user?._id || viewedIds.has(receiverId) || receiverId.includes("dummy"))
+    if (!user?._id || viewedIds.has(receiverId) )
       return;
     console.log(`👁️ [VIEW] Sending view log for: ${receiverName}`);
     try {
       viewedIds.add(receiverId);
-      await fetch("/api/social/view", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderId: user._id, receiverId, type: "VIEW" }),
-      });
+      await logViewAction(user._id , receiverId)
     } catch (err) {
       viewedIds.delete(receiverId);
     }
@@ -93,12 +95,9 @@ const ActiveChallengers = ({
     setLikedPlayers((prev) => ({ ...prev, [receiverId]: !isCurrentlyLiked }));
 
     try {
-      const res = await fetch("/api/social/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderId: user._id, receiverId }),
-      });
-      if (!res.ok) throw new Error();
+       const res = await toggleLikeAction(user._id, receiverId);
+
+    if (res?.error) throw new Error();
       console.log("✅ [LIKE] Database updated");
     } catch (err) {
       setLikedPlayers((prev) => ({ ...prev, [receiverId]: isCurrentlyLiked }));
@@ -106,10 +105,15 @@ const ActiveChallengers = ({
     }
   };
 
-  const allPlayers = useMemo(
-    () => [...realPlayers, ...DUMMY_PLAYERS],
-    [realPlayers],
-  );
+
+const allPlayers = realPlayers;
+
+  // Dummy players logic
+
+  // const allPlayers = useMemo(
+  //   () => [...realPlayers, ...DUMMY_PLAYERS],
+  //   [realPlayers],
+  // );
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 p-2">
