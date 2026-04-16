@@ -27,43 +27,12 @@ export default function HomePage() {
   const isRedirecting = useRef(false);
   const subscribedRef = useRef(false);
 
-  useEffect(() => {
-    if (!user) return;
-    fetch("/api/social/heartbeat", { method: "POST" });
-  }, [user]);
-
   // useEffect(() => {
-  //   if (loading || !user || !pusher || subscribedRef.current) return;
+  //   if (!user) return;
+  //   fetch("/api/social/heartbeat", { method: "POST" });
+  // }, [user]);
 
-  //   console.log("📡 [FRONTEND] Subscribing to presence-online...");
-  //   const channel = pusher.subscribe("presence-online");
-  //   subscribedRef.current = true;
-
-  //   channel.bind("pusher:subscription_succeeded", (members: any) => {
-  //     console.log(
-  //       `✅ [FRONTEND] Presence sync. Online count: ${members.count}`,
-  //     );
-  //     setOnlineCount(members.count);
-  //     let found = null;
-  //     members.each((member: any) => {
-  //       if (member.id !== String(user._id))
-  //         found = { id: member.id, ...member.info };
-  //     });
-  //     if (found) setRecentOpponent(found);
-  //   });
-
-  //   channel.bind("pusher:member_added", (member: any) => {
-  //     setOnlineCount((prev) => prev + 1);
-  //     setRecentOpponent((prev: any) => prev || member.info);
-  //     toast.info(`${member.info.name} came online!`);
-  //   });
-
-  //   channel.bind("pusher:member_removed", (member: any) => {
-  //     setOnlineCount((prev) => Math.max(0, prev - 1));
-  //     setRecentOpponent((prev: any) => (prev?.id === member.id ? null : prev));
-  //   });
-  // }, [user?._id, pusher, loading]);
-
+ 
   const stopMatchingLogic = () => {
     if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     if (checkStatusRef.current) clearInterval(checkStatusRef.current);

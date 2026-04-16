@@ -87,24 +87,32 @@ const ActiveChallengers = ({
     }
   };
 
-  const toggleLike = async (receiverId: string) => {
+const toggleLike = async (receiverId: string) => {
     if (!user) return toast.error("Login Required");
+    
     const isCurrentlyLiked = likedPlayers[receiverId];
-    console.log(`❤️ [LIKE] Optimistic update: ${!isCurrentlyLiked}`);
-
+    
+    // 1. Optimistic Update (UI changes immediately)
     setLikedPlayers((prev) => ({ ...prev, [receiverId]: !isCurrentlyLiked }));
 
     try {
        const res = await toggleLikeAction(user._id, receiverId);
 
-    if (res?.error) throw new Error();
-      console.log("✅ [LIKE] Database updated");
+       if (res?.error) {
+         throw new Error(res.error);
+       }
+       
+       console.log(`✅ [LIKE] Database updated. New state: ${res.isLiked}`);
+       
+       // 2. Sync state with what the server actually says
+       setLikedPlayers((prev) => ({ ...prev, [receiverId]: !!res.isLiked }));
+       
     } catch (err) {
+      // 3. Revert on failure
       setLikedPlayers((prev) => ({ ...prev, [receiverId]: isCurrentlyLiked }));
-      toast.error("Action failed");
+      toast.error("Action failed. Try again.");
     }
   };
-
 
 const allPlayers = realPlayers;
 
