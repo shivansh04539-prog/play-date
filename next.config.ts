@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false, // ✅ Already disabled - good!
 
   // ✅ ADD THIS: Optimize production builds
-  swcMinify: true,
+
 
   // ✅ ADD THIS: Reduce bundle size
   compiler: {

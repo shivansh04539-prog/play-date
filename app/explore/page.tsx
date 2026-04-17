@@ -1,3 +1,4 @@
+import { getActivePlayers } from "@/actions/(explore)/playerActions";
 import Discover from "@/components/(Discover)/Discover";
 import React from "react";
 
@@ -6,8 +7,9 @@ export const metadata = {
   description:"All the users available in the website for dating girl and boys including both thise is so solid and working genius."
 }
 
-const page = () => {
-  return <Discover />;
+const page = async() => {
+  const initialData = await getActivePlayers();
+  return <Discover initialPlayers={initialData.users} />;
 };
 
 export default page;

@@ -1,20 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Heart, Zap, Eye } from "lucide-react";
+import { Heart, Zap } from "lucide-react";
 import ActiveChallengers from "./ActiveChallengers";
 
-const Discover = () => {
+const Discover = ({ initialPlayers }: { initialPlayers: any[] }) => {
   const [likeCount, setLikeCount] = useState(0);
-  const [viewers, setViewers] = useState<any[]>([]); // To hold the viewer data
+  const [viewers, setViewers] = useState<any[]>([]);
 
   return (
     <main className="min-h-screen bg-[#F3F0F5] pb-24 font-sans">
       <div className="max-w-6xl mx-auto">
-        {/* Top Header Section */}
         <header className="p-6 flex justify-between items-center">
-          {/* Left Side: Stats Container */}
           <div className="flex items-center gap-2">
-            {/* LIKES BOX */}
             <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/50 shadow-sm h-11">
               <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
               <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
@@ -22,14 +19,13 @@ const Discover = () => {
               </span>
             </div>
 
-            {/* VIEWS BOX - Perfectly matched height and style */}
             {viewers.length > 0 && (
               <div className="flex items-center gap-3 bg-white/40 backdrop-blur-md px-3 py-2 rounded-full border border-white/50 shadow-sm h-11">
                 <div className="flex -space-x-2.5">
                   {viewers.slice(0, 3).map((v, i) => (
                     <img
                       key={i}
-                      src={v.img}
+                      src={v.img || v.photo}
                       className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-sm"
                       alt="viewer"
                     />
@@ -45,14 +41,12 @@ const Discover = () => {
             )}
           </div>
 
-          {/* Right Side: Profile */}
           <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform shrink-0">
             <span className="text-white text-xs font-bold">YOU</span>
           </div>
         </header>
 
         <div className="px-6 space-y-8">
-          {/* Live Seminar Card */}
           <section className="relative overflow-hidden group cursor-pointer">
             <div className="absolute inset-0 bg-gradient-to-r from-[#00DDAA] to-[#00BA99] opacity-90 rounded-[32px]" />
             <div className="relative p-6 md:p-10 flex justify-between items-center z-10">
@@ -70,7 +64,6 @@ const Discover = () => {
             </div>
           </section>
 
-          {/* Active Challengers Section */}
           <section>
             <div className="flex justify-between items-end mb-4">
               <div>
@@ -86,10 +79,10 @@ const Discover = () => {
               </div>
             </div>
 
-            {/* Grid Component - We pass setViewers here */}
             <ActiveChallengers
               setLikeCount={setLikeCount}
               setViewers={setViewers}
+              initialPlayers={initialPlayers}
             />
           </section>
         </div>
